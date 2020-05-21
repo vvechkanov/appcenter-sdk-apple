@@ -9,15 +9,14 @@ WORK_DIR="${SRCROOT}/../AppCenter-SDK-Apple/xcframework"
 # Work dir will be the final output to the framework.
 XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
 
-# Dir where catalyst build framewrok stored after build
-CATALYST_BUILD_DIR="build/Release-maccatalyst/"
+# Directory where catalyst store frameworks after build.
+CATALYST_BUILD_DIR="${WORK_DIR}/Release-maccatalyst/"
 
 # Clean previus XCFramework build.
 rm -rf ${PROJECT_NAME}.xcframework/
 
 # Build and move mac catalyst framework
-xcodebuild -project "${SRCROOT}/${PROJECT_NAME}.xcodeproj" -configuration "Release" -scheme "${PROJECT_NAME} iOS Framework" -destination 'platform=macOS,variant=Mac Catalyst' 
-cp -R "$CATALYST_BUILD_DIR" "${XCFRAMEWORK_DIR}"
+xcodebuild -project "${SRCROOT}/${PROJECT_NAME}.xcodeproj" -configuration "Release" -scheme "${PROJECT_NAME} iOS Framework" -destination 'platform=macOS,variant=Mac Catalyst' CONFIGURATION_BUILD_DIR="${CATALYST_BUILD_DIR}"
 
 # Create a command to build XCFramework.
 for SDK in iphoneos iphonesimulator appletvos appletvsimulator macOS maccatalyst; do
@@ -33,4 +32,6 @@ RES_FILE_PATH="$WORK_DIR/Release-iphoneos/AppCenterDistributeResources.bundle"
 if [[ ${PROJECT_NAME} == "AppCenterDistribute" ]] && [ -e "${RES_FILE_PATH}" ]; then
     mv "${RES_FILE_PATH}" "${XC_FRAMEWORK_PATH}"
 fi
+
+rm -rf "$XC_FRAMEWORK_PATH"
 
