@@ -11,6 +11,7 @@ echo "Building ${TARGET_NAME}."
 
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
+WORK_DIR=build
 BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-tvOS"
 TEMP_DIR="${BUILD_DIR}/temp"
 

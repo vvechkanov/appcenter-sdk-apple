@@ -20,6 +20,7 @@ echo "Building ${TARGET_NAME}."
 
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
+WORK_DIR=build
 BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-iOS"
 TEMP_DIR="${BUILD_DIR}/temp"
 
@@ -63,7 +64,7 @@ if [ -z "$MS_ARM64E_XCODE_PATH" ] || [ ! -d "$MS_ARM64E_XCODE_PATH" ]; then
   lipo -create "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${TEMP_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
 else
 
-  # Grep the output of `lipo -archs` if it contains "arm64e". If it does, don't build for arm64e again.
+# Grep the output of `lipo -archs` if it contains "arm64e". If it does, don't build for arm64e again.
 DOES_CONTAIN_ARM64E=`env DEVELOPER_DIR="$MS_ARM64E_XCODE_PATH" /usr/bin/lipo -archs "${LIB_IPHONEOS_FINAL}" | grep arm64e`
 
 if [ ! -z "${DOES_CONTAIN_ARM64E}" ]; then
