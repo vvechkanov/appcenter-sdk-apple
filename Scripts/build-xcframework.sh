@@ -11,7 +11,7 @@ WORK_DIR="${ROOT_DIR}/xcframework"
 XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
 
 # Clean previus XCFramework build.
-rm -rf ${PROJECT_NAME}.xcframework/
+if [ -d "${XC_FRAMEWORK_PATH}" ]; then rm -Rf "${XC_FRAMEWORK_PATH}"; fi
 
 # Build and move mac catalyst framework
 MACCATALYST_BUILD_DIR="${ROOT_DIR}/${CONFIGURATION}-maccatalyst"
@@ -31,6 +31,4 @@ RES_FILE_PATH="${BUILD_DIR}/${CONFIGURATION}-iphoneos/AppCenterDistributeResourc
 if [[ ${PROJECT_NAME} == "AppCenterDistribute" ]] && [ -e "${RES_FILE_PATH}" ]; then
     mv "${RES_FILE_PATH}" "${XC_FRAMEWORK_PATH}"
 fi
-
-rm -rf "$XC_FRAMEWORK_PATH"
 
