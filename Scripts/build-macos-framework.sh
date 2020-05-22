@@ -25,6 +25,7 @@ if [ -d "${BUILD_DIR}" ]; then rm -Rf "${BUILD_DIR}"; fi
 mkdir -p "${BUILD_DIR}"
 
 # Building both architectures.
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" CONFIGURATION_BUILD_DIR="${BUILD_DIR}"
 
 

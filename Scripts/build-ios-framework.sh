@@ -40,6 +40,8 @@ mkdir -p "${BUILD_DIR}"
 mkdir -p "${TEMP_DIR}"
 
 # Building both architectures.
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
+
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphoneos CONFIGURATION_BUILD_DIR="${TEMP_DEVICE_DIR}"
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphonesimulator CONFIGURATION_BUILD_DIR="${TEMP_SIMULATOR_DIR}"
 
