@@ -11,7 +11,7 @@ WORK_DIR="${ROOT_DIR}/xcframework"
 XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
 
 # Clean previus XCFramework build.
-if [ -d "${XC_FRAMEWORK_PATH}" ]; then rm -Rf "${XC_FRAMEWORK_PATH}"; fi
+rm -rf ${PROJECT_NAME}.xcframework/
 
 # Build and move mac catalyst framework
 MACCATALYST_BUILD_DIR="${ROOT_DIR}/output/${CONFIGURATION}-maccatalyst"
