@@ -53,9 +53,9 @@ xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}
 cp -R "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework" "${BUILD_DIR}"
 
 # Copy the resource bundle for App Center Distribute.
-if [ -d "${SRCROOT}/${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" ]; then
+if [ -d "${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" ]; then
   echo "Copying resource bundle."
-  cp -R "${SRCROOT}/${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" "${BUILD_DIR}" || true
+  cp -R "${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" "${BUILD_DIR}" || true
 fi
 
 LIB_IPHONEOS_FINAL="${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
