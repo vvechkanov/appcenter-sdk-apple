@@ -31,15 +31,12 @@ TEMP_SIMULATOR_DIR="${TEMP_DIR}/${CONFIGURATION}-iphonesimulator/"
 cd "${SRCROOT}"
 
 # Cleaning the previous build.
-if [ -d "${BUILD_DIR}/${PROJECT_NAME}.framework" ]; then
-  rm -rf "${BUILD_DIR}/${PROJECT_NAME}.framework"
-fi
+if [ -d "${BUILD_DIR}" ]; then rm -Rf "${BUILD_DIR}"; fi
 
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"
 
 # Create temp directory.
-if [ -d "${TEMP_DIR}" ]; then rm -Rf "${TEMP_DIR}"; fi
 mkdir -p "${TEMP_DIR}"
 
 # Building both architectures.
