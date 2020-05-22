@@ -14,12 +14,13 @@ XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
 if [ -d "${XC_FRAMEWORK_PATH}" ]; then rm -Rf "${XC_FRAMEWORK_PATH}"; fi
 
 # Build and move mac catalyst framework
-MACCATALYST_BUILD_DIR="${ROOT_DIR}/temp/${CONFIGURATION}-maccatalyst"
+MACCATALYST_BUILD_DIR="${ROOT_DIR}/output/${CONFIGURATION}-maccatalyst"
+if [ -d "${MACCATALYST_BUILD_DIR}" ]; then rm -Rf "${MACCATALYST_BUILD_DIR}"; fi
 xcodebuild -project "${SRCROOT}/${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -scheme "${PROJECT_NAME} iOS Framework" -destination 'platform=macOS,variant=Mac Catalyst' CONFIGURATION_BUILD_DIR="${MACCATALYST_BUILD_DIR}"
 
 # Create a command to build XCFramework.
 for SDK in iphoneos iphonesimulator appletvos appletvsimulator macOS maccatalyst; do
-    FRAMEWORK_PATH="${ROOT_DIR}/temp/${CONFIGURATION}-${SDK}/${PROJECT_NAME}.framework"
+    FRAMEWORK_PATH="${ROOT_DIR}/output/${CONFIGURATION}-${SDK}/${PROJECT_NAME}.framework"
     [ -e "${FRAMEWORK_PATH}" ] && XC_BUILD_COMMAND="${XC_BUILD_COMMAND} -framework ${FRAMEWORK_PATH}";
 done
 XC_BUILD_COMMAND="xcodebuild -create-xcframework ${XC_BUILD_COMMAND} -output ${XC_FRAMEWORK_PATH}"

@@ -22,49 +22,50 @@ echo "Building ${TARGET_NAME}."
 # The following line create it in the root folder of the current project.
 WORK_DIR=build
 BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/iOS"
-TEMP_DIR="${SRCROOT}/../AppCenter-SDK-Apple/temp"
+TEMP_DIR="${SRCROOT}/../AppCenter-SDK-Apple/output"
 
 # Working dir will be deleted after the framework creation.
-TEMP_DEVICE_DIR="${TEMP_DIR}/${CONFIGURATION}-iphoneos/"
-TEMP_SIMULATOR_DIR="${TEMP_DIR}/${CONFIGURATION}-iphonesimulator/"
+OUTPUT_DEVICE_DIR="${TEMP_DIR}/${CONFIGURATION}-iphoneos/"
+OUTPUT_SIMULATOR_DIR="${TEMP_DIR}/${CONFIGURATION}-iphonesimulator/"
 
 # Make sure we're inside $SRCROOT.
 cd "${SRCROOT}"
 
 # Cleaning the previous builds.
 if [ -d "${BUILD_DIR}" ]; then rm -Rf "${BUILD_DIR}"; fi
-if [ -d "${TEMP_DEVICE_DIR}" ]; then rm -Rf "${TEMP_DEVICE_DIR}"; fi
-if [ -d "${TEMP_SIMULATOR_DIR}" ]; then rm -Rf "${TEMP_SIMULATOR_DIR}"; fi
+if [ -d "${OUTPUT_DEVICE_DIR}" ]; then rm -Rf "${OUTPUT_DEVICE_DIR}"; fi
+if [ -d "${OUTPUT_SIMULATOR_DIR}" ]; then rm -Rf "${OUTPUT_SIMULATOR_DIR}"; fi
 
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"
 
 # Create temp directories.
-mkdir -p "${TEMP_DEVICE_DIR}"
-mkdir -p "${TEMP_SIMULATOR_DIR}"
+mkdir -p "${OUTPUT_DEVICE_DIR}"
+mkdir -p "${OUTPUT_SIMULATOR_DIR}"
 
-# Building both architectures.
+# Clean build.
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
 
-xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphoneos CONFIGURATION_BUILD_DIR="${TEMP_DEVICE_DIR}"
-xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphonesimulator CONFIGURATION_BUILD_DIR="${TEMP_SIMULATOR_DIR}"
+# Building both architectures.
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphoneos CONFIGURATION_BUILD_DIR="${OUTPUT_DEVICE_DIR}"
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" -sdk iphonesimulator CONFIGURATION_BUILD_DIR="${OUTPUT_SIMULATOR_DIR}"
 
 # Copy framework.
-cp -R "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework" "${BUILD_DIR}"
+cp -R "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework" "${BUILD_DIR}"
 
 # Copy the resource bundle for App Center Distribute.
-if [ -d "${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" ]; then
+if [ -d "${OUTPUT_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" ]; then
   echo "Copying resource bundle."
-  cp -R "${TEMP_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" "${BUILD_DIR}" || true
+  cp -R "${OUTPUT_DEVICE_DIR}/${RESOURCE_BUNDLE}.bundle" "${BUILD_DIR}" || true
 fi
 
-LIB_IPHONEOS_FINAL="${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
+LIB_IPHONEOS_FINAL="${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
 
 # Create the arm64e slice in Xcode 10.1 and lipo it with the device binary that was created with oldest supported Xcode version.
 if [ -z "$MS_ARM64E_XCODE_PATH" ] || [ ! -d "$MS_ARM64E_XCODE_PATH" ]; then
   echo "Environment variable MS_ARM64E_XCODE_PATH not set or not a valid path."
   echo "Use current Xcode version and lipo -create the fat binary."
-  lipo -create "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${TEMP_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
+  lipo -create "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${OUTPUT_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
 else
 
 # Grep the output of `lipo -archs` if it contains "arm64e". If it does, don't build for arm64e again.
@@ -76,19 +77,19 @@ else
     echo "Building the arm64e slice."
 
     # Move binary that was create with old Xcode to temp location.
-    DEVICE_TEMP_DIR="${TEMP_DEVICE_DIR}/temp"
+    DEVICE_TEMP_DIR="${OUTPUT_DEVICE_DIR}/temp"
     mkdir -p "${DEVICE_TEMP_DIR}"
-    mv "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${DEVICE_TEMP_DIR}/${PROJECT_NAME}"
+    mv "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${DEVICE_TEMP_DIR}/${PROJECT_NAME}"
 
     # Build with the Xcode version that supports arm64e.
     env DEVELOPER_DIR="${MS_ARM64E_XCODE_PATH}" /usr/bin/xcodebuild ARCHS="arm64e" -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" 
 
     # Lipo the binaries that were built with various Xcode versions.
-    env DEVELOPER_DIR="${MS_ARM64E_XCODE_PATH}" lipo -create "${DEVICE_TEMP_DIR}/${PROJECT_NAME}" "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
+    env DEVELOPER_DIR="${MS_ARM64E_XCODE_PATH}" lipo -create "${DEVICE_TEMP_DIR}/${PROJECT_NAME}" "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
   fi
 
   echo "Use arm64e Xcode and lipo -create the fat binary."
-  env DEVELOPER_DIR="$MS_ARM64E_XCODE_PATH" lipo -create "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${TEMP_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
+  env DEVELOPER_DIR="$MS_ARM64E_XCODE_PATH" lipo -create "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${OUTPUT_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
 
 # End of arm64e code block.
 fi
