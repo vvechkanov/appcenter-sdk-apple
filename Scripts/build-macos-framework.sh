@@ -11,28 +11,25 @@ echo "Building ${TARGET_NAME}."
 
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
-PRODUCTS_DIR=${SRCROOT}/../AppCenter-SDK-Apple/macOS
+BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-macOS"
 
 # Working dir will be deleted after the framework creation.
-WORK_DIR=build
-DEVICE_DIR="${WORK_DIR}/${CONFIGURATION}/"
 
 # Make sure we're inside $SRCROOT.
 cd "${SRCROOT}"
 
-# Cleaning previous build.
-xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
-
-# Building both architectures.
-xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}"  
-
-# Cleaning the previous build.
-if [ -d "${PRODUCTS_DIR}/${PROJECT_NAME}.framework" ]; then
-  rm -rf "${PRODUCTS_DIR}/${PROJECT_NAME}.framework"
+# Creates and renews the final product folder.
+if [ -d "${BUILD_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${BUILD_DIR}/${PROJECT_NAME}.framework"
 fi
 
 # Creates and renews the final product folder.
-mkdir -p "${PRODUCTS_DIR}"
+mkdir -p "${BUILD_DIR}"
 
-# Copy framework.
-cp -R "${DEVICE_DIR}/${PROJECT_NAME}.framework" "${PRODUCTS_DIR}"
+# Cleaning previous build.
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean CONFIGURATION_BUILD_DIR="${BUILD_DIR}"
+
+# Building both architectures.
+xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" CONFIGURATION_BUILD_DIR="${BUILD_DIR}"
+
+
