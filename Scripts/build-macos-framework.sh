@@ -26,9 +26,6 @@ fi
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"
 
-# Cleaning previous build.
-xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean CONFIGURATION_BUILD_DIR="${BUILD_DIR}"
-
 # Building both architectures.
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" CONFIGURATION_BUILD_DIR="${BUILD_DIR}"
 

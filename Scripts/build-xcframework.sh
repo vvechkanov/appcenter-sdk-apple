@@ -4,8 +4,8 @@
 # Licensed under the MIT License.
 
 # Work dir is directory where all XCFramework artifacts is stored.
-BUILD_DIR=build
-WORK_DIR="${SRCROOT}/../AppCenter-SDK-Apple/xcframework"
+ROOT_DIR="${SRCROOT}/../AppCenter-SDK-Apple/"
+WORK_DIR="${ROOT_DIR}/xcframework"
 
 # Work dir will be the final output to the framework.
 XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
@@ -14,11 +14,12 @@ XC_FRAMEWORK_PATH="${WORK_DIR}/Output/${PROJECT_NAME}.xcframework"
 rm -rf ${PROJECT_NAME}.xcframework/
 
 # Build and move mac catalyst framework
-xcodebuild -project "${SRCROOT}/${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -scheme "${PROJECT_NAME} iOS Framework" -destination 'platform=macOS,variant=Mac Catalyst'
+MACCATALYST_BUILD_DIR="${ROOT_DIR}/${CONFIGURATION}-maccatalyst"
+xcodebuild -project "${SRCROOT}/${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -scheme "${PROJECT_NAME} iOS Framework" -destination 'platform=macOS,variant=Mac Catalyst' CONFIGURATION_BUILD_DIR="${MACCATALYST_BUILD_DIR}"
 
 # Create a command to build XCFramework.
 for SDK in iphoneos iphonesimulator appletvos appletvsimulator macOS maccatalyst; do
-    FRAMEWORK_PATH="${BUILD_DIR}/${CONFIGURATION}-${SDK}/${PROJECT_NAME}.framework"
+    FRAMEWORK_PATH="${ROOT_DIR}/${CONFIGURATION}-${SDK}/${PROJECT_NAME}.framework"
     [ -e "${FRAMEWORK_PATH}" ] && XC_BUILD_COMMAND="${XC_BUILD_COMMAND} -framework ${FRAMEWORK_PATH}";
 done
 XC_BUILD_COMMAND="xcodebuild -create-xcframework ${XC_BUILD_COMMAND} -output ${XC_FRAMEWORK_PATH}"
