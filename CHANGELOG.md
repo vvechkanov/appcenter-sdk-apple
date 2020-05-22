@@ -1,5 +1,13 @@
 # App Center SDK for iOS, macOS and tvOS Change Log
 
+## Version 3.3.0 (Under development)
+
+### App Center
+
+* **[Fix]** Fix screen resolution detection and order of width and height fields for different platforms.
+
+___
+
 ## Version 3.2.0
 
 ### App Center
