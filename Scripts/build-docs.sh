@@ -4,7 +4,7 @@
 # Licensed under the MIT License.
 
 OS_NAME=$1
-BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-${OS_NAME}"
+BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${OS_NAME}"
 INSTALL_DIR="${BUILD_DIR}/${PROJECT_NAME}.framework"
 DOCUMENTATION_DIR="${BUILD_DIR}/Documentation/${PROJECT_NAME}"
 

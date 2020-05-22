@@ -21,8 +21,8 @@ echo "Building ${TARGET_NAME}."
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
 WORK_DIR=build
-BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-iOS"
-TEMP_DIR="${BUILD_DIR}/temp"
+BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/iOS"
+TEMP_DIR="${SRCROOT}/../AppCenter-SDK-Apple/temp"
 
 # Working dir will be deleted after the framework creation.
 TEMP_DEVICE_DIR="${TEMP_DIR}/${CONFIGURATION}-iphoneos/"
@@ -31,14 +31,17 @@ TEMP_SIMULATOR_DIR="${TEMP_DIR}/${CONFIGURATION}-iphonesimulator/"
 # Make sure we're inside $SRCROOT.
 cd "${SRCROOT}"
 
-# Cleaning the previous build.
+# Cleaning the previous builds.
 if [ -d "${BUILD_DIR}" ]; then rm -Rf "${BUILD_DIR}"; fi
+if [ -d "${TEMP_DEVICE_DIR}" ]; then rm -Rf "${TEMP_DEVICE_DIR}"; fi
+if [ -d "${TEMP_SIMULATOR_DIR}" ]; then rm -Rf "${TEMP_SIMULATOR_DIR}"; fi
 
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"
 
-# Create temp directory.
-mkdir -p "${TEMP_DIR}"
+# Create temp directories.
+mkdir -p "${TEMP_DEVICE_DIR}"
+mkdir -p "${TEMP_SIMULATOR_DIR}"
 
 # Building both architectures.
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
@@ -89,6 +92,3 @@ else
 
 # End of arm64e code block.
 fi
-
-# Clean temp directory.
-if [ -d "${TEMP_DIR}" ]; then rm -Rf "${TEMP_DIR}"; fi

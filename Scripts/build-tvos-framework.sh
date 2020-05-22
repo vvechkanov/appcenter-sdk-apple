@@ -12,8 +12,8 @@ echo "Building ${TARGET_NAME}."
 # Install dir will be the final output to the framework.
 # The following line create it in the root folder of the current project.
 WORK_DIR=build
-BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/${CONFIGURATION}-tvOS"
-TEMP_DIR="${BUILD_DIR}/temp"
+BUILD_DIR="${SRCROOT}/../AppCenter-SDK-Apple/tvOS"
+TEMP_DIR="${SRCROOT}/../AppCenter-SDK-Apple/temp"
 
 # Working dir will be deleted after the framework creation.
 TEMP_DEVICE_DIR="${TEMP_DIR}/${CONFIGURATION}-appletvos/"
@@ -24,10 +24,13 @@ cd "${SRCROOT}"
 
 # Cleaning the previous build.
 if [ -d "${BUILD_DIR}" ]; then rm -rf "${BUILD_DIR}"; fi
-mkdir -p "${BUILD_DIR}"
+if [ -d "${TEMP_DEVICE_DIR}" ]; then rm -Rf "${TEMP_DEVICE_DIR}"; fi
+if [ -d "${TEMP_SIMULATOR_DIR}" ]; then rm -Rf "${TEMP_SIMULATOR_DIR}"; fi
 
-# Create temp directory.
-mkdir -p "${TEMP_DIR}"
+# Create temp directories.
+mkdir -p "${BUILD_DIR}"
+mkdir -p "${TEMP_DEVICE_DIR}"
+mkdir -p "${TEMP_SIMULATOR_DIR}"
 
 # Building both architectures.
 xcodebuild -project "${PROJECT_NAME}.xcodeproj" -configuration "${CONFIGURATION}" -target "${TARGET_NAME}" clean
@@ -40,6 +43,3 @@ cp -R "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework" "${BUILD_DIR}"
 
 # # Uses the Lipo Tool to merge both binary files (i386/x86_64 + armv7/armv7s/arm64) into one Universal final product.
 lipo -create "${TEMP_DEVICE_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${TEMP_SIMULATOR_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}" -output "${BUILD_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}"
-
-# Clean temp directory.
-if [ -d "${TEMP_DIR}" ]; then rm -Rf "${TEMP_DIR}"; fi
