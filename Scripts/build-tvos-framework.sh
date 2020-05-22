@@ -23,9 +23,15 @@ OUTPUT_SIMULATOR_DIR="${TEMP_DIR}/${CONFIGURATION}-appletvsimulator/"
 cd "${SRCROOT}"
 
 # Cleaning the previous build.
-if [ -d "${BUILD_DIR}" ]; then rm -rf "${BUILD_DIR}"; fi
-if [ -d "${OUTPUT_DEVICE_DIR}" ]; then rm -Rf "${OUTPUT_DEVICE_DIR}"; fi
-if [ -d "${OUTPUT_SIMULATOR_DIR}" ]; then rm -Rf "${OUTPUT_SIMULATOR_DIR}"; fi
+if [ -d "${BUILD_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${BUILD_DIR}/${PROJECT_NAME}.framework"
+fi
+if [ -d "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework"
+fi
+if [ -d "${OUTPUT_SIMULATOR_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${OUTPUT_SIMULATOR_DIR}/${PROJECT_NAME}.framework"
+fi
 
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"

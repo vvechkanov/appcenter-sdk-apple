@@ -21,8 +21,12 @@ OUTPUT_DEVICE_DIR="${SRCROOT}/../AppCenter-SDK-Apple/output/${CONFIGURATION}-mac
 cd "${SRCROOT}"
 
 # Creates and renews the final product folder.
-if [ -d "${BUILD_DIR}" ]; then rm -Rf "${BUILD_DIR}"; fi
-if [ -d "${OUTPUT_DEVICE_DIR}" ]; then rm -Rf "${OUTPUT_DEVICE_DIR}"; fi
+if [ -d "${BUILD_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${BUILD_DIR}/${PROJECT_NAME}.framework"
+fi
+if [ -d "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework" ]; then
+  rm -rf "${OUTPUT_DEVICE_DIR}/${PROJECT_NAME}.framework"
+fi
 
 # Creates and renews the final product folder.
 mkdir -p "${BUILD_DIR}"
