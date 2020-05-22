@@ -164,6 +164,7 @@ class MSCrashesViewController: UITableViewController, UIImagePickerControllerDel
         
         // Binary attachment.
       } else if indexPath.row == 2 {
+#if TARGET_OS_IOS
         PHPhotoLibrary.requestAuthorization({ (status: PHAuthorizationStatus) -> Void in ()
           if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
             let picker = UIImagePickerController()
@@ -171,6 +172,7 @@ class MSCrashesViewController: UITableViewController, UIImagePickerControllerDel
             self.present(picker, animated: true)
           }
         })
+#endif
       } else if indexPath.row == 3 {
         let alertController = UIAlertController(title: "Clear crash user confirmation?",
                                                 message: nil,
