@@ -2837,7 +2837,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\"${SRCROOT}/../Scripts/VerifyNoBuildSettings.swift\" ${PROJECT_NAME}.xcodeproj/project.pbxproj\n";
+			shellScript = "\"${SRCROOT}/../Scripts/VerifyNoBuildSettings.swift\" ${PROJECT_NAME}.xcodeproj/project.pbxproj\n";
 		};
 		C9FA992323200B9E007E276C /* Verify No Build Settings */ = {
 			isa = PBXShellScriptBuildPhase;
